@@ -13,6 +13,10 @@ import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
 
+    private val soundVisualizerView: SoundVisualizerView by lazy {
+        findViewById(R.id.soundVisualizerView)
+    }
+
     /**
      * Record button
      */
@@ -169,6 +173,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         this.recorder?.start()
+        this.soundVisualizerView.startVisualizing()
         this.state = State.ON_RECORDING
     }
 
@@ -182,6 +187,7 @@ class MainActivity : AppCompatActivity() {
             release()
         }
         this.recorder = null
+        this.soundVisualizerView.stopVisualizing()
         this.state = State.AFTER_RECORDING
     }
 
@@ -220,6 +226,10 @@ class MainActivity : AppCompatActivity() {
      * Bind views
      */
     private fun bindViews() {
+
+        this.soundVisualizerView.onRequestCurrentAmplitude = {
+            recorder?.maxAmplitude ?: 0
+        }
 
         this.resetButton.setOnClickListener {
 
