@@ -13,6 +13,9 @@ import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
 
+    /**
+     * Sound visualizer view
+     */
     private val soundVisualizerView: SoundVisualizerView by lazy {
         findViewById(R.id.soundVisualizerView)
     }
@@ -102,8 +105,7 @@ class MainActivity : AppCompatActivity() {
                 this,
                 this.RECORD_AUDIO_PERMISSION
             ) == PackageManager.PERMISSION_GRANTED -> {
-
-
+                // DO NOTHING
             }
             shouldShowRequestPermissionRationale(
                 this.RECORD_AUDIO_PERMISSION
@@ -209,6 +211,11 @@ class MainActivity : AppCompatActivity() {
             setDataSource(recordingFilePath)
             prepare()
         }
+
+        this.player?.setOnCompletionListener {
+            stopPlaying()
+            state = State.AFTER_RECORDING
+        }
         this.player?.start()
         this.soundVisualizerView.startVisualizing(true)
         this.recordTimeView.startCountUp()
@@ -247,6 +254,8 @@ class MainActivity : AppCompatActivity() {
         this.resetButton.setOnClickListener {
 
             this.stopPlaying()
+            this.soundVisualizerView.clearVisualization()
+            this.recordTimeView.clearCountTime()
             this.initVariables()
         }
 

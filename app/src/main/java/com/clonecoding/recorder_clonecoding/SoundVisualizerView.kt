@@ -9,7 +9,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 
 /**
- *
+ * Sound visualizer view
  */
 class SoundVisualizerView(
     context: Context,
@@ -26,17 +26,35 @@ class SoundVisualizerView(
         strokeCap = Paint.Cap.ROUND
     }
 
+    /**
+     * Drawing width
+     */
     private var drawingWidth: Int = 0
 
+    /**
+     * Drawing height
+     */
     private var drawingHeight: Int = 0
 
+    /**
+     * Sound amplitude list
+     */
     private var drawingAmplitudes: List<Int> = emptyList()
 
+    /**
+     * Is replaying
+     */
     private var isReplaying: Boolean = false
 
-    var onRequestCurrentAmplitude: (() -> Int)? = null
-
+    /**
+     * Replaying length position
+     */
     private var replayingPosition: Int = 0
+
+    /**
+     * Request get amplitude
+     */
+    var onRequestCurrentAmplitude: (() -> Int)? = null
 
     /**
      * Visualize sound
@@ -108,15 +126,33 @@ class SoundVisualizerView(
         }
     }
 
+    /**
+     * Start visualizing view
+     *
+     * @param isReplaying
+     *      replaying check
+     */
     fun startVisualizing(isReplaying: Boolean) {
 
         this.isReplaying = isReplaying
         this.handler?.post(this.visualizeRepeatAction)
     }
 
+    /**
+     * Stop visualizing view
+     */
     fun stopVisualizing() {
 
         this.handler?.removeCallbacks(this.visualizeRepeatAction)
+    }
+
+    /**
+     * Clear view
+     */
+    fun clearVisualization() {
+
+        this.drawingAmplitudes = emptyList()
+        invalidate()
     }
 
     companion object {
