@@ -26,7 +26,7 @@
         app:layout_constraintTop_toTopOf="@id/recordButton"
         app:layout_constraintBottom_toBottomOf="@id/recordButton"/>
 
-    <TextView
+    <com.clonecoding.recorder_clonecoding.CountUpTextView
         android:id="@+id/recordTimeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

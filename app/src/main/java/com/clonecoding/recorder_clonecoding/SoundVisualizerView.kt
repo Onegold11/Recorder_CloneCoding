@@ -36,15 +36,23 @@ class SoundVisualizerView(
 
     var onRequestCurrentAmplitude: (() -> Int)? = null
 
+    private var replayingPosition: Int = 0
 
-
+    /**
+     * Visualize sound
+     */
     private val visualizeRepeatAction: Runnable = object : Runnable {
 
         override fun run() {
 
-            val currentAmplitude = onRequestCurrentAmplitude?.invoke() ?: 0
+            if(isReplaying == false) {
 
-            drawingAmplitudes = listOf(currentAmplitude) + drawingAmplitudes
+                val currentAmplitude = onRequestCurrentAmplitude?.invoke() ?: 0
+
+                drawingAmplitudes = listOf(currentAmplitude) + drawingAmplitudes
+            } else {
+                replayingPosition++
+            }
 
             invalidate()
 
@@ -52,6 +60,9 @@ class SoundVisualizerView(
         }
     }
 
+    /**
+     * Size init
+     */
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
 
@@ -59,6 +70,9 @@ class SoundVisualizerView(
         this.drawingHeight = h
     }
 
+    /**
+     * onDraw
+     */
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
@@ -68,7 +82,15 @@ class SoundVisualizerView(
         val centerY = this.drawingHeight / 2f
         var offsetX = this.drawingWidth.toFloat()
 
-        this.drawingAmplitudes.forEach {
+        this.drawingAmplitudes
+            .let {
+                if (this.isReplaying) {
+                    it.takeLast(this.replayingPosition)
+                } else {
+                    it
+                }
+            }
+            .forEach {
             val lineLength = it / MAX_AMPLITUDE * drawingHeight * 0.8F
 
             offsetX -= LINE_SPACE

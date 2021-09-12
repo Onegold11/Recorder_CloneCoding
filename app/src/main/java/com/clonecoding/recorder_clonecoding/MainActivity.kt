@@ -32,6 +32,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
+     * Record time text view
+     */
+    private val recordTimeView: CountUpTextView by lazy {
+        findViewById(R.id.recordTimeTextView)
+    }
+
+    /**
      * Record state
      */
     private var state: State = State.BEFORE_RECORDING
@@ -173,7 +180,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         this.recorder?.start()
-        this.soundVisualizerView.startVisualizing()
+        this.soundVisualizerView.startVisualizing(false)
+        this.recordTimeView.startCountUp()
         this.state = State.ON_RECORDING
     }
 
@@ -188,6 +196,7 @@ class MainActivity : AppCompatActivity() {
         }
         this.recorder = null
         this.soundVisualizerView.stopVisualizing()
+        this.recordTimeView.stopCountUp()
         this.state = State.AFTER_RECORDING
     }
 
@@ -201,6 +210,8 @@ class MainActivity : AppCompatActivity() {
             prepare()
         }
         this.player?.start()
+        this.soundVisualizerView.startVisualizing(true)
+        this.recordTimeView.startCountUp()
         this.state = State.ON_PLAYING
     }
 
@@ -211,6 +222,8 @@ class MainActivity : AppCompatActivity() {
 
         this.player?.release()
         player = null
+        this.soundVisualizerView.stopVisualizing()
+        this.recordTimeView.stopCountUp()
         this.state = State.AFTER_RECORDING
     }
 
